@@ -9,10 +9,10 @@ Rice_Project/
 ├── Rice_Risk_CS240_Colab.ipynb      notebook หลัก (ไฟล์ที่ส่ง)
 ├── README_TH.md                     ไฟล์นี้
 ├── data/
-│   ├── raw/Rice_Mycotoxin_Dashboard.xlsx   ข้อมูลต้นฉบับ (notebook โหลดจาก GitHub)
-│   └── generated/                   ไฟล์ที่ notebook สร้างระหว่างทาง
-│       ├── NASA_POWER.xlsx
-│       └── Rice_Dirty.xlsx
+│   ├── raw/Rice_Mycotoxin_Dashboard.xlsx   ข้อมูลต้นฉบับที่กลุ่มได้รับ
+│   └── generated/
+│       ├── Dashboard_Mock_Detailed_Raw.xlsx  ข้อมูลสกปรก + อำเภอ/ตำบล สมมติ (notebook โหลดจาก GitHub)
+│       └── NASA_POWER.xlsx          notebook สร้างใหม่ทุกครั้งที่รัน
 ├── outputs/                         ผลลัพธ์สำหรับรายงาน
 │   ├── Rice_Project_Results.xlsx
 │   ├── results_summary.txt
@@ -26,7 +26,7 @@ Rice_Project/
 ## วิธีใช้บน Google Colab
 
 1. เปิด notebook นี้ใน Colab แล้วเลือก Runtime → Run all
-2. Notebook โหลด **Rice_Mycotoxin_Dashboard.xlsx** จาก `https://github.com/GearJP2/CS240` (`data/raw/`) เอง ไม่ต้องอัปโหลด
+2. Notebook โหลด **Dashboard_Mock_Detailed_Raw.xlsx** จาก `https://github.com/GearJP2/CS240` (`data/generated/`) เอง ไม่ต้องอัปโหลด
 3. Notebook เรียก NASA POWER API 22 จุด สร้าง `NASA_POWER.xlsx` แล้วอ่านกลับมาทำ cleansing, merge และโมเดลต่อโดยอัตโนมัติ
 4. ถึงหัวข้อ Demo ให้เปลี่ยนค่า `LOCATION` แล้วรัน cell นั้นใหม่
 5. ผลตารางอยู่ใน `Rice_Project_Results.xlsx`; Excel อากาศและภาพกราฟดาวน์โหลดเพิ่มเติมได้จาก Files ด้านซ้าย
@@ -60,14 +60,15 @@ Rice_Project/
 
 ## สมมติฐานและผลล่าสุด
 
-- ค่าสาร/label/จังหวัดมาจาก Excel เดิม; วันเก็บ/วันทราบผล +7 วัน/จุดพิกัดตัวแทนเป็นสมมติ
+- ค่าสาร/label/จังหวัดมาจาก Excel เดิม; วัน-เวลาเก็บ/วันทราบผล +7 วัน/แปลง/พิกัดเป็นสมมติ
+- อำเภอ/ตำบลเป็นชื่อจริงของจังหวัดนั้น แต่การจับคู่กับแปลงเป็นการสุ่ม และพิกัดไม่ได้อยู่ในตำบลนั้นจริง; อากาศยังดึงรายจังหวัด 22 จุด
 - NASA เป็นอากาศจริง ณ จุด/เวลาที่ร้องขอ ไม่ใช่อากาศของแปลงจริงที่ยืนยันแล้ว
-- Scenario 440 ตัวอย่าง; dirty 445 แถว/41 รูปแบบจังหวัด → clean 440 แถว/22 จังหวัด
-- ประวัติปี 2021 มี 171 ตัวอย่างใน 8 จังหวัด; ชุดโมเดลปี 2022 มี 268 ตัวอย่าง โดย 178 ไม่มีประวัติจังหวัดในปี 2021
-- Train 153 / Validation 52 / Test 48 / Purged 15
+- ข้าว 440 ตัวอย่าง (แยก 6 แถวที่ปีเดิมอยู่นอก 2021–2022); cleansing: จังหวัด 44 → 22 รูปแบบ, อำเภอ 75 → 39, Site_ID 171 → 140, ไม่มีแถวซ้ำในไฟล์
+- ประวัติปี 2021 มี 171 ตัวอย่างใน 8 จังหวัด; ชุดโมเดลปี 2022 มี 267 ตัวอย่าง โดย 177 ไม่มีประวัติจังหวัดในปี 2021
+- Train 151 / Validation 50 / Test 51 / Purged 15
 - ใช้ `class_weight='balanced'` กับ LR/DT (ถ้าใช้ default ทั้งสามโมเดลทาย Negative หมด F1=0)
-- Validation F1: LR 0.273, DT 0.235, KNN 0; Always Positive 0.267 → เลือก Logistic Regression
-- Test LR: accuracy 0.583, recall 0.444 (จับ Positive ได้ 4 จาก 9), F1 0.286 ต่ำกว่า Always Positive (0.316) จึงยังไม่พร้อมใช้เลือกพื้นที่ภาคสนาม
+- Validation F1: LR 0.400, DT 0, KNN 0; Always Positive 0.305 → เลือก Logistic Regression
+- Test LR: accuracy 0.627, recall 0.6 (จับ Positive ได้ 3 จาก 5), F1 0.240 สูงกว่า Always Positive (0.179) แต่ test มี Positive แค่ 5 ตัวอย่าง ผลจึงยังไม่น่าเชื่อถือพอใช้เลือกพื้นที่ภาคสนาม
 - `no risk` ไม่รับรองความปลอดภัย; คะแนนยังไม่ calibrated และยังไม่แบ่ง low/medium/high
 
 ผลรุ่นนี้เป็น F1 จาก validation ครั้งเดียว ไม่ใช่ CV F2 รุ่นเก่า ห้ามนำตัวเลขมาปะปนกัน
