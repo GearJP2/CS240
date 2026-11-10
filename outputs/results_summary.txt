@@ -1,0 +1,5 @@
+SCENARIO ONLY | history=171, modeling=268
+train=153, validation=52, test=48, purged=15
+Selected: Logistic Regression | validation F1=0.000
+Test recall=0.000, F1=0.000
+Mock dates / proxy coordinates: not a field validation.
