@@ -9,7 +9,7 @@ Rice_Project/
 ├── Rice_Risk_CS240_Colab.ipynb      notebook หลัก (ไฟล์ที่ส่ง)
 ├── README_TH.md                     ไฟล์นี้
 ├── data/
-│   ├── raw/Rice_Mycotoxin_Dashboard.xlsx   ข้อมูลต้นฉบับ (อัปโหลดเข้า Colab)
+│   ├── raw/Rice_Mycotoxin_Dashboard.xlsx   ข้อมูลต้นฉบับ (notebook โหลดจาก GitHub)
 │   └── generated/                   ไฟล์ที่ notebook สร้างระหว่างทาง
 │       ├── NASA_POWER.xlsx
 │       └── Rice_Dirty.xlsx
@@ -26,7 +26,7 @@ Rice_Project/
 ## วิธีใช้บน Google Colab
 
 1. เปิด notebook นี้ใน Colab แล้วเลือก Runtime → Run all
-2. เมื่อระบบถาม ให้อัปโหลด **Rice_Mycotoxin_Dashboard.xlsx เพียงไฟล์เดียว** โดยใช้ชื่อเดิม
+2. Notebook โหลด **Rice_Mycotoxin_Dashboard.xlsx** จาก `https://github.com/GearJP2/CS240` (`data/raw/`) เอง ไม่ต้องอัปโหลด
 3. Notebook เรียก NASA POWER API 22 จุด สร้าง `NASA_POWER.xlsx` แล้วอ่านกลับมาทำ cleansing, merge และโมเดลต่อโดยอัตโนมัติ
 4. ถึงหัวข้อ Demo ให้เปลี่ยนค่า `LOCATION` แล้วรัน cell นั้นใหม่
 5. ผลตารางอยู่ใน `Rice_Project_Results.xlsx`; Excel อากาศและภาพกราฟดาวน์โหลดเพิ่มเติมได้จาก Files ด้านซ้าย
